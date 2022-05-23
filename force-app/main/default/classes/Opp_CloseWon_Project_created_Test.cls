@@ -110,6 +110,7 @@ public class Opp_CloseWon_Project_created_Test {
         projectList[i].End_Date__c,
         'Incorrect End date!, must be ' + oppttyList[i].End_Date__c
       );
+
       //Check origin of opportunity, Stage of this must be 'Closed Won'
       System.assertEquals(oppttyList[i].StageName, 'Closed Won');
 
