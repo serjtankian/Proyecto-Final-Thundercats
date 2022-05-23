@@ -1,7 +1,9 @@
 @isTest
 public class Opp_CloseWon_Project_created_Test {
+   
   public static Map<Id, List<Opportunity_Line_Item__c>> oppLineItemsByOppId = new Map<Id, List<Opportunity_Line_Item__c>>();
-  @TestSetup
+  
+   @TestSetup
   static void makeData() {
     //create dates
     Date closeDate = Date.today().addDays(30);
