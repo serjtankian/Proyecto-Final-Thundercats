@@ -28,7 +28,26 @@ public with sharing class Alocate_Resources_Helper {
       WHERE Project__c = :projectId
     ];
 
+    //Listar los roles que necesitamos cubrir
+    List<AggregateResult> rolesToBeCovered = [
+      SELECT SUM(Hours_Quantity__c), Rol__c Rol
+      FROM Project_Line_Item__c
+      GROUP BY ROLLUP(Rol__c)
+    ];
+
+    //armar una lista de los roles
+    for (AggregateResult rtbc : rolesToBeCovered) {
+      System.debug(rtbc);
+    }
+
     //Listar los resource que esten disponibles en el periodo que este proyecto dure
-  
+    /*
+    mostrar las posiciones sin asignar 
+    solamente le permita asignar personas que tengan el mismo rol 
+    disponibles en el rango de fechas del proyecto.
+    */
+
+    //fecha en que empieza y termina el proyecto - 1/5 empieza 31/5 termina
+    //Rango de fecha en la que el recurso esta ocupado a partir de la fehca de comienzo del proyecto?
   }
 }
