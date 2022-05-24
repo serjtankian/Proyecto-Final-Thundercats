@@ -14,8 +14,6 @@ public with sharing class Alocate_Resources_Helper {
         AND Status__c = 'Pre-Kickoff'
     ];
 
-    //System.debug(projectRecord); //Ok
-
     //listar los registros resource/project que pertenezcan a este proyecto
 
     List<Resource_Project__c> resourceProject = [
@@ -30,10 +28,9 @@ public with sharing class Alocate_Resources_Helper {
       WHERE Project__c = :projectId
     ];
 
-    Boolean check =
-      resourceProject[0].Resource_Start_Date__c > resourceProject[0].Resource_End_Date__c;
-    System.debug('Start date mayor a End date?--->' + check);
-
+    Boolean available =
+      projectRecord.End_Date__c > resourceProject[0].Resource_End_Date__c;
+    System.debug(available);
     //Listar los resource que esten disponibles en el periodo que este proyecto dure
   }
 }
