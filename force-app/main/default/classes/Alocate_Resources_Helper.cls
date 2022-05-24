@@ -30,15 +30,19 @@ public with sharing class Alocate_Resources_Helper {
 
     //Listar los roles que necesitamos cubrir
     List<AggregateResult> rolesToBeCovered = [
-      SELECT SUM(Hours_Quantity__c), Rol__c Rol
+      SELECT SUM(Hours_Quantity__c)Hours, Rol__c Rol
       FROM Project_Line_Item__c
-      GROUP BY ROLLUP(Rol__c)
+      WHERE Project__c = :projectId
+      GROUP BY Rol__c
     ];
 
-    //armar una lista de los roles
+    Map<String, Decimal> hoursByRol = new Map<String, Decimal>();
+    //armar un Map de los roles
     for (AggregateResult rtbc : rolesToBeCovered) {
-      System.debug(rtbc);
+      hoursByRol.put((String)rtbc.get('Rol'), (Decimal) rtbc.get('Hours'));
     }
+      
+      System.debug(hoursByRol);
 
     //Listar los resource que esten disponibles en el periodo que este proyecto dure
     /*
