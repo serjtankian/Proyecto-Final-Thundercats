@@ -28,9 +28,7 @@ public with sharing class Alocate_Resources_Helper {
       WHERE Project__c = :projectId
     ];
 
-    Boolean available =
-      projectRecord.End_Date__c > resourceProject[0].Resource_End_Date__c;
-    System.debug(available);
     //Listar los resource que esten disponibles en el periodo que este proyecto dure
+  
   }
 }
