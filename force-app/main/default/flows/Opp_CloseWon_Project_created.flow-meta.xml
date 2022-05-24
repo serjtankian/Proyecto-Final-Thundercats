@@ -102,6 +102,12 @@
             </value>
         </inputAssignments>
         <inputAssignments>
+            <field>Project_Manager__c</field>
+            <value>
+                <elementReference>$Record.Project_Manager__r.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
             <field>Start_Date__c</field>
             <value>
                 <elementReference>$Record.Start_Date__c</elementReference>
