@@ -1,9 +1,8 @@
 @isTest
 public class Opp_CloseWon_Project_created_Test {
-   
   public static Map<Id, List<Opportunity_Line_Item__c>> oppLineItemsByOppId = new Map<Id, List<Opportunity_Line_Item__c>>();
-  
-   @TestSetup
+
+  @TestSetup
   static void makeData() {
     //create dates
     Date closeDate = Date.today().addDays(30);
@@ -17,7 +16,7 @@ public class Opp_CloseWon_Project_created_Test {
     }
     insert accList;
 
-    //create a opportunitys
+    //create a opportunities
     List<Opportunity> oppsToInsert = new List<Opportunity>();
     for (Integer i = 0; i < 3; i++) {
       Opportunity opp = new Opportunity(
@@ -26,7 +25,8 @@ public class Opp_CloseWon_Project_created_Test {
         CloseDate = closeDate,
         Start_Date__c = startDate,
         End_Date__c = endDate,
-        AccountId = accList[i].Id
+        AccountId = accList[i].Id,
+        Project_Manager__c = UserInfo.getUserId()
       );
       oppsToInsert.add(opp);
     }
@@ -83,7 +83,8 @@ public class Opp_CloseWon_Project_created_Test {
         End_Date__c,
         Status__c,
         Total_Hours__c,
-        Amount__c
+        Amount__c,
+        Project_Manager__c
       FROM Project__c
       WHERE Opportunity__c IN :oppIds
     ];
@@ -134,6 +135,12 @@ public class Opp_CloseWon_Project_created_Test {
       projectList[0].Total_Hours__c,
       30,
       'Rollup Summary must be 30'
+    );
+
+    System.assertEquals(
+      userinfo.getUserId(),
+      projectList[0].Project_Manager__c,
+      'Project manager incorrect cloned info'
     );
   }
 }
