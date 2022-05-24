@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Resource_Start_Date__c</fullName>
+    <businessStatus>Active</businessStatus>
     <description>start date assigned to the resource</description>
     <externalId>false</externalId>
     <label>Resource Start Date</label>
-    <required>false</required>
+    <required>true</required>
     <trackTrending>false</trackTrending>
     <type>Date</type>
 </CustomField>
