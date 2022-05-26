@@ -1,4 +1,4 @@
-import { LightningElement } from 'lwc';
+import { LightningElement,wire} from 'lwc';
 
 export default class ResourceAllocation extends LightningElement {
     // Aca podria guardar los datos que me lleguen de la query que hagan en Apex, luego puedo mostrar
