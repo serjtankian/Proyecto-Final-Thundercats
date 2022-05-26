@@ -1,104 +1,35 @@
 <template>
-    <!-- <template if:true={siMeLlegaInfoEjemplo.data}> -->
-
-
-    <!-- CONSULTANTS -->
-    <lightning-card variant="Narrow" title="Consultants" icon-name="utility:questions_and_answers" footer="Card Footer">
-        <p slot="actions">Hours to be covered: 250hs</p>
-        <div class="slds-box slds-p-around_none slds-m-top_x-small slds-m-bottom_medium slds-m-horizontal_none">
-            <lightning-layout>
-                <lightning-layout-item flexibility="auto" padding="around-small">
-                    <div class="custom-box slds-box slds-p-around_medium slds-text-align_center">
-                        <lightning-checkbox-group name="Checkbox Group" options={options} value={value}
-                            onchange={handleChange}></lightning-checkbox-group>
-                    </div>
-                </lightning-layout-item>
-                <lightning-layout-item flexibility="auto" padding="around-small">
-                    <div class="custom-box slds-box slds-p-around_medium slds-text-align_center">
-                        <!-- Tendria que armar una lista con los precios de las personas -->
-                        15usd p/h
-                        <br>
-                        30usd p/h
-                    </div>
-                </lightning-layout-item>
-                <lightning-layout-item flexibility="auto" padding="around-small">
-                    <div class="custom-box slds-box slds-p-around_medium slds-text-align_center">
-                        <lightning-input type="date" name="input1" label="From:"></lightning-input>
-                    </div>
-                </lightning-layout-item>
-                <lightning-layout-item flexibility="auto" padding="around-small">
-                    <div class="custom-box slds-box slds-p-around_medium slds-text-align_center">
-                        <lightning-input type="date" name="input2" label="To:"></lightning-input>
-                    </div>
-                </lightning-layout-item>
-            </lightning-layout>
-        </div>
-    </lightning-card>
-
-    <!-- DEVELOPERS -->
-    <lightning-card variant="Narrow" title="Developers" icon-name="utility:insert_tag_field" footer="Card Footer">
-        <p slot="actions">Hours to be covered: 300hs</p>
-        <div class="slds-box slds-p-around_none slds-m-top_x-small slds-m-bottom_medium slds-m-horizontal_none">
-            <lightning-layout>
-                <lightning-layout-item flexibility="auto" padding="around-small">
-                    <div class="custom-box slds-box slds-p-around_medium slds-text-align_center">
-                        <lightning-checkbox-group name="Checkbox Group" options={options} value={value}
-                            onchange={handleChange}></lightning-checkbox-group>
-                    </div>
-                </lightning-layout-item>
-                <lightning-layout-item flexibility="auto" padding="around-small">
-                    <div class="custom-box slds-box slds-p-around_medium slds-text-align_center">
-                        <!-- Tendria que armar una lista con los precios de las personas -->
-                        15usd p/h
-                        <br>
-                        30usd p/h
-                    </div>
-                </lightning-layout-item>
-                <lightning-layout-item flexibility="auto" padding="around-small">
-                    <div class="custom-box slds-box slds-p-around_medium slds-text-align_center">
-                        <lightning-input type="date" name="input1" label="From:"></lightning-input>
-                    </div>
-                </lightning-layout-item>
-                <lightning-layout-item flexibility="auto" padding="around-small">
-                    <div class="custom-box slds-box slds-p-around_medium slds-text-align_center">
-                        <lightning-input type="date" name="input2" label="To:"></lightning-input>
-                    </div>
-                </lightning-layout-item>
-            </lightning-layout>
-        </div>
-    </lightning-card>
-
-    <!-- ARCHITECTS -->
-    <lightning-card variant="Narrow" title="Architects" icon-name="utility:custom_apps" footer="Card Footer">
-        <p slot="actions">Hours to be covered: 100hs</p>
-        <div class="slds-box slds-p-around_none slds-m-top_x-small slds-m-bottom_medium slds-m-horizontal_none">
-            <lightning-layout>
-                <lightning-layout-item flexibility="auto" padding="around-small">
-                    <div class="custom-box slds-box slds-p-around_medium slds-text-align_center">
-                        <lightning-checkbox-group name="Checkbox Group" options={options} value={value}
-                            onchange={handleChange}></lightning-checkbox-group>
-                    </div>
-                </lightning-layout-item>
-                <lightning-layout-item flexibility="auto" padding="around-small">
-                    <div class="custom-box slds-box slds-p-around_medium slds-text-align_center">
-                        <!-- Tendria que armar una lista con los precios de las personas -->
-                        15usd p/h
-                        <br>
-                        30usd p/h
-                    </div>
-                </lightning-layout-item>
-                <lightning-layout-item flexibility="auto" padding="around-small">
-                    <div class="custom-box slds-box slds-p-around_medium slds-text-align_center">
-                        <lightning-input type="date" name="input1" label="From:"></lightning-input>
-                    </div>
-                </lightning-layout-item>
-                <lightning-layout-item flexibility="auto" padding="around-small">
-                    <div class="custom-box slds-box slds-p-around_medium slds-text-align_center">
-                        <lightning-input type="date" name="input2" label="To:"></lightning-input>
-                    </div>
-                </lightning-layout-item>
-            </lightning-layout>
-        </div>
-    </lightning-card>
-    <!-- </template> -->
+    <template for:each={roles} for:item="rol">
+        <lightning-card footer="Card Footer" title="" key={roles.rol}>
+            <h1 class="title">{rol.name} - Hours to cover : 250 hours</h1>
+            <div class="container">
+                <lightning-layout class="layout">
+                    <lightning-layout-item flexibility="auto" padding="around-small">
+                        <div class="custom-box slds-box slds-p-around_medium slds-text-align_center boxCheckbox">
+                            <lightning-input type="checkbox" label="Esclavo uno"></lightning-input>
+                        </div>
+                    </lightning-layout-item>
+                    <lightning-layout-item flexibility="auto" padding="around-small">
+                        <div class="custom-box slds-box slds-p-around_medium slds-text-align_center whiteBackground">
+                            <p>10usd p/h</p>
+                        </div>
+                    </lightning-layout-item>
+                    <lightning-layout-item flexibility="auto" padding="around-small">
+                        <div class="custom-box slds-box slds-p-around_medium slds-text-align_center whiteBackground">
+                            <lightning-input type="date" label="From"></lightning-input>
+                        </div>
+                    </lightning-layout-item>
+                    <lightning-layout-item flexibility="auto" padding="around-small">
+                        <div class="custom-box slds-box slds-p-around_medium slds-text-align_center whiteBackground">
+                            <lightning-input type="date" label="To"></lightning-input>
+                        </div>
+                    </lightning-layout-item>
+                </lightning-layout>
+                <lightning-button variant="brand-outline" label="Assign" title="Primary action with lighter look"
+                    onclick={handleClick} class="slds-m-left_x-small btn"></lightning-button>
+            </div>
+        </lightning-card>
+    </template>
 </template>
+
+
