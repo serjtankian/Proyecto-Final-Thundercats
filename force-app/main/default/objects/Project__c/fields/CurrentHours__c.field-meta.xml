@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Rol__c</fullName>
+    <fullName>CurrentHours__c</fullName>
     <externalId>false</externalId>
+<<<<<<< HEAD:force-app/main/default/objects/Opportunity_Line_Item__c/fields/Rol__c.field-meta.xml
     <label>Rol</label>
     <required>true</required>
     <trackTrending>false</trackTrending>
@@ -22,4 +23,13 @@
             </value>
         </valueSetDefinition>
     </valueSet>
+=======
+    <label>CurrentHours</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+>>>>>>> bea1aabbf46ba5b3db3ead88f5c1479ac27c11d9:force-app/main/default/objects/Project__c/fields/CurrentHours__c.field-meta.xml
 </CustomField>
