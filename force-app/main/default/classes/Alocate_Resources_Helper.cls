@@ -56,7 +56,9 @@ public with sharing class Alocate_Resources_Helper {
 //fecha en que empieza y termina el proyecto - 1/5 empieza 31/5 termina
 //Rango de fecha en la que el recurso esta ocupado a partir de la fehca de comienzo del proyecto?
 /*
-mostrar las posiciones sin asignar 
+mostrar las posiciones sin asignar
+
 solamente le permita asignar personas que tengan el mismo rol 
+
 disponibles en el rango de fechas del proyecto.
 */
