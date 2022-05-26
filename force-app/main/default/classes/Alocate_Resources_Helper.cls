@@ -1,5 +1,6 @@
 public with sharing class Alocate_Resources_Helper {
-  public static void getAvailableResources(Id projectId) {
+  @AuraEnabled(cacheable=true)
+  public static String getAvailableResources(Id projectId) {
     //Obtener el UserId
     Id userId = UserInfo.getuserId(); //get current userId
 
@@ -60,18 +61,15 @@ public with sharing class Alocate_Resources_Helper {
     //Se guarda en un mapa lista de resources disponibles por rol
     Map<String, Set<Id>> availableUsersByRol = new Map<String, Set<Id>>();
 
-    for (Resource_Project__c rp :      
-      [
-        SELECT
-          Resource_Start_Date__c,
-          Resource_End_Date__c,
-          Resource__c,
-          Resource__r.Rol__c
-        FROM Resource_Project__c
-        WHERE Resource__c IN :resources
-      ]
-      
-    ) {
+    for (Resource_Project__c rp : [
+      SELECT
+        Resource_Start_Date__c,
+        Resource_End_Date__c,
+        Resource__c,
+        Resource__r.Rol__c
+      FROM Resource_Project__c
+      WHERE Resource__c IN :resources
+    ]) {
       if (rp.Resource_End_Date__c < projectRecord.Start_Date__c) {
         if (!availableUsersByRol.containsKey(rp.Resource__r.rol__c)) {
           availableUsersByRol.put(rp.Resource__r.rol__c, new Set<Id>());
@@ -96,9 +94,13 @@ public with sharing class Alocate_Resources_Helper {
         availableUsersByRol.get(rp.Resource__r.rol__c).remove(rp.Resource__c);
       }
     }
+
+    //Listar los resource que esten disponibles en el periodo que este proyecto dure
+    System.debug(availableUsersByRol);
+    String availableResources = JSON.serialize(availableUsersByRol);
+    return availableResources;
   }
 }
-//Listar los resource que esten disponibles en el periodo que este proyecto dure
 
 //fecha en que empieza y termina el proyecto - 1/5 empieza 31/5 termina
 //Rango de fecha en la que el recurso esta ocupado a partir de la fehca de comienzo del proyecto?
@@ -107,3 +109,4 @@ mostrar las posiciones sin asignar
 solamente le permita asignar personas que tengan el mismo rol 
 disponibles en el rango de fechas del proyecto.
 */
+

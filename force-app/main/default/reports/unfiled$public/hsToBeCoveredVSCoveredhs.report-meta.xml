@@ -7,12 +7,12 @@
         <chartSummaries>
             <aggregate>Sum</aggregate>
             <axisBinding>y</axisBinding>
-            <column>ProjectLineItem__c.HoursQuantity__c</column>
+            <column>Project_Line_Item__c.HoursQuantity__c</column>
         </chartSummaries>
         <chartType>Donut</chartType>
         <enableHoverLabels>false</enableHoverLabels>
         <expandOthers>false</expandOthers>
-        <groupingColumn>ProjectLineItem__c.Rol__c</groupingColumn>
+        <groupingColumn>Project_Line_Item__c.Rol__c</groupingColumn>
         <legendPosition>Right</legendPosition>
         <location>CHART_BOTTOM</location>
         <showAxisLabels>true</showAxisLabels>
@@ -28,7 +28,7 @@
     </chart>
     <columns>
         <aggregateTypes>Sum</aggregateTypes>
-        <field>ProjectLineItem__c.HoursQuantity__c</field>
+        <field>Project_Line_Item__c.Hours_Quantity__c</field>
     </columns>
     <columns>
         <field>CUST_NAME</field>
@@ -36,7 +36,7 @@
     <format>Summary</format>
     <groupingsDown>
         <dateGranularity>Day</dateGranularity>
-        <field>ProjectLineItem__c.Rol__c</field>
+        <field>Project_Line_Item__c.Rol__c</field>
         <sortOrder>Asc</sortOrder>
     </groupingsDown>
     <name>Hours to be covered by Rol</name>
@@ -44,7 +44,7 @@
         <name>co</name>
         <value>1</value>
     </params>
-    <reportType>CustomEntityCustomEntity$Project__c$ProjectLineItem__c</reportType>
+    <reportType>CustomEntityCustomEntity$Project__c$Project_Line_Item__c</reportType>
     <scope>user</scope>
     <showDetails>true</showDetails>
     <showGrandTotal>false</showGrandTotal>
