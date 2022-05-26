@@ -6,7 +6,14 @@ public with sharing class Alocate_Resources_Helper {
     //Listar los project en el que ese user es project manager.
     //y además deben filtrarse por status__c = 'Pre-kickoff'.
     Project__c projectRecord = [
-      SELECT Id, Name, Project_Manager__c, Status__c, Total_Hours__c, Start_Date__c,End_Date__c
+      SELECT
+        Id,
+        Name,
+        Project_Manager__c,
+        Status__c,
+        Total_Hours__c,
+        Start_Date__c,
+        End_Date__c
       FROM Project__c
       WHERE
         Project_Manager__c = :userId
@@ -49,31 +56,46 @@ public with sharing class Alocate_Resources_Helper {
       WHERE Rol__c = :hoursByRol.keySet()
     ];
     System.debug(resources);
-    Set<Id> resourceIdSet=new Set<Id>();
-    //Se guarda en un mapa lista de resources disponibles por rol
-    Map<String,Set<Id>> availableUsersByRol = new Map<String,Set<Id>>();
-  for (Resource_Project__c rp : [SELECT Resource_Start_Date__c,Resource_End_Date__c ,Resource__c, Resource__r.Rol__c from Resource_Project__c  WHERE Resource__c In: resources ] ) {
-   if(rp.Resource_End_Date__c<projectRecord.Start_Date__c){
-     resourceIdSet.add(rp.Resource__c);
-    availableUsersByRol.put(rp.Resource__r.Rol__c,resourceIdSet);
-   }
-   else if (rp.Resource_End_Date__c<projectRecord.End_Date__c) {
-    resourceIdSet.add(rp.Resource__c);
-    availableUsersByRol.put(rp.Resource__r.Rol__c,resourceIdSet);
-   }
-   else if(rp.Resource_Start_Date__c>projectRecord.Start_Date__c){
-    resourceIdSet.add(rp.Resource__c);
-    availableUsersByRol.put(rp.Resource__r.Rol__c,resourceIdSet);
-   }
-   else if(rp.Resource_Start_Date__c>projectRecord.End_Date__c){
-    resourceIdSet.add(rp.Resource__c);
-    availableUsersByRol.put(rp.Resource__r.Rol__c,resourceIdSet);
-   }
-   else if(resourceIdSet.contains(rp.Resource__c)){
-    resourceIdSet.remove(rp.Resource__c);
-   }
-  }
 
+    //Se guarda en un mapa lista de resources disponibles por rol
+    Map<String, Set<Id>> availableUsersByRol = new Map<String, Set<Id>>();
+
+    for (Resource_Project__c rp :      
+      [
+        SELECT
+          Resource_Start_Date__c,
+          Resource_End_Date__c,
+          Resource__c,
+          Resource__r.Rol__c
+        FROM Resource_Project__c
+        WHERE Resource__c IN :resources
+      ]
+      
+    ) {
+      if (rp.Resource_End_Date__c < projectRecord.Start_Date__c) {
+        if (!availableUsersByRol.containsKey(rp.Resource__r.rol__c)) {
+          availableUsersByRol.put(rp.Resource__r.rol__c, new Set<Id>());
+        }
+        availableUsersByRol.get(rp.Resource__r.rol__c).add(rp.Resource__c);
+      } else if (rp.Resource_End_Date__c < projectRecord.End_Date__c) {
+        if (!availableUsersByRol.containsKey(rp.Resource__r.rol__c)) {
+          availableUsersByRol.put(rp.Resource__r.rol__c, new Set<Id>());
+        }
+        availableUsersByRol.get(rp.Resource__r.rol__c).add(rp.Resource__c);
+      } else if (rp.Resource_Start_Date__c > projectRecord.Start_Date__c) {
+        if (!availableUsersByRol.containsKey(rp.Resource__r.rol__c)) {
+          availableUsersByRol.put(rp.Resource__r.rol__c, new Set<Id>());
+        }
+        availableUsersByRol.get(rp.Resource__r.rol__c).add(rp.Resource__c);
+      } else if (rp.Resource_Start_Date__c > projectRecord.End_Date__c) {
+        if (!availableUsersByRol.containsKey(rp.Resource__r.rol__c)) {
+          availableUsersByRol.put(rp.Resource__r.rol__c, new Set<Id>());
+        }
+        availableUsersByRol.get(rp.Resource__r.rol__c).add(rp.Resource__c);
+      } else {
+        availableUsersByRol.get(rp.Resource__r.rol__c).remove(rp.Resource__c);
+      }
+    }
   }
 }
 //Listar los resource que esten disponibles en el periodo que este proyecto dure
