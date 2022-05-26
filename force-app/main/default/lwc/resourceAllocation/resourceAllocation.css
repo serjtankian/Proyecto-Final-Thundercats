@@ -1,5 +1,33 @@
-p{
-    font-size:15px;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+.whiteBackground{
+    background-color: white;
+    border-style: none;
+  }
+  
+  .boxCheckbox{
+    padding: 16px;
+    background-color: white;
+    color: black;
+    border: 2px solid #a2d2ff;
+  }
+  
+  .title{
+    background-color: white;
+    color: black;
+    border: 2px solid #a2d2ff;
+    font-size: 16px;
+    margin: 8px;
+    text-align: center;
+    padding: 8px;
     font-weight: bold;
-}
+  }
+  
+  .btn{
+    display: flex;
+    justify-content: center;
+  }
+  
+  .layout{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+  }
