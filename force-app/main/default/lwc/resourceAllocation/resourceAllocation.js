@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-import { LightningElement } from 'lwc';
-
-export default class ResourceAllocation extends LightningElement {
-
-=======
 import { LightningElement,wire} from 'lwc';
 
 export default class ResourceAllocation extends LightningElement {
@@ -20,5 +14,4 @@ export default class ResourceAllocation extends LightningElement {
         const changeValue = event.detail.value;
         alert(changeValue);
     }
->>>>>>> bea1aabbf46ba5b3db3ead88f5c1479ac27c11d9
 }
