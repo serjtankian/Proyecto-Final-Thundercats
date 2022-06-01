@@ -148,22 +148,20 @@
     <enableFeeds>false</enableFeeds>
     <enableHistory>false</enableHistory>
     <enableLicensing>false</enableLicensing>
-    <enableReports>true</enableReports>
-    <enableSearch>true</enableSearch>
+    <enableReports>false</enableReports>
+    <enableSearch>false</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
     <externalSharingModel>Private</externalSharingModel>
     <gender>Feminine</gender>
-    <label>Project</label>
+    <label>Resource-Project</label>
     <nameField>
-        <displayFormat>P-{0000}</displayFormat>
-        <label>Project Name</label>
+        <displayFormat>RP-{0000}</displayFormat>
+        <label>Resource-Project Name</label>
         <type>AutoNumber</type>
     </nameField>
-    <pluralLabel>Projects</pluralLabel>
-    <searchLayouts>
-        <searchResultsAdditionalFields>Status__c</searchResultsAdditionalFields>
-    </searchLayouts>
+    <pluralLabel>Resource-Projects</pluralLabel>
+    <searchLayouts></searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
     <visibility>Public</visibility>
 </CustomObject>

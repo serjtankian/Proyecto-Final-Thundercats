@@ -1,5 +1,7 @@
 public with sharing class Alocate_Resources_Helper {
-  public static void getAvailableResources(Id projectId) {
+  public static Map<String, Decimal> hoursByRol = new Map<String, Decimal>();
+  @AuraEnabled(cacheable=true)
+  public static List<User> getAvailableResources(String projectId) {
     //Obtener el UserId
     Id userId = UserInfo.getuserId(); //get current userId
 
@@ -29,10 +31,12 @@ public with sharing class Alocate_Resources_Helper {
         Project__c,
         Hours_Quantity__c,
         Resource__r.rol__c,
+        Resource__r.Name,
         Resource_Start_Date__c,
         Resource_End_Date__c
       FROM Resource_Project__c
       WHERE Project__c = :projectId
+      //WITH SECURITY_ENFORCED
     ];
 
     //Listar los roles que necesitamos cubrir
@@ -44,66 +48,147 @@ public with sharing class Alocate_Resources_Helper {
     ];
 
     //armar un Mapa de horas por roles
-    Map<String, Decimal> hoursByRol = new Map<String, Decimal>();
+    
     for (AggregateResult rtbc : rolesToBeCovered) {
       hoursByRol.put((String) rtbc.get('Rol'), (Decimal) rtbc.get('Hours'));
     }
-    //Listar los Users (Resources) que matcheen a los roles requeridos en el project
 
+    //Listar los Users (Resources) que matcheen a los roles requeridos en el project
     List<User> resources = [
       SELECT FirstName, LastName, Rol__c, Rate_p_Hora__c
       FROM User
       WHERE Rol__c = :hoursByRol.keySet()
     ];
-    System.debug(resources);
 
     //Se guarda en un mapa lista de resources disponibles por rol
-    Map<String, Set<Id>> availableUsersByRol = new Map<String, Set<Id>>();
+    Map<String, List<User>> availableUsersByRol = new Map<String, List<User>>();
 
-    for (Resource_Project__c rp :      
-      [
-        SELECT
-          Resource_Start_Date__c,
-          Resource_End_Date__c,
-          Resource__c,
-          Resource__r.Rol__c
-        FROM Resource_Project__c
-        WHERE Resource__c IN :resources
-      ]
-      
-    ) {
-      if (rp.Resource_End_Date__c < projectRecord.Start_Date__c) {
-        if (!availableUsersByRol.containsKey(rp.Resource__r.rol__c)) {
-          availableUsersByRol.put(rp.Resource__r.rol__c, new Set<Id>());
-        }
-        availableUsersByRol.get(rp.Resource__r.rol__c).add(rp.Resource__c);
-      } else if (rp.Resource_End_Date__c < projectRecord.End_Date__c) {
-        if (!availableUsersByRol.containsKey(rp.Resource__r.rol__c)) {
-          availableUsersByRol.put(rp.Resource__r.rol__c, new Set<Id>());
-        }
-        availableUsersByRol.get(rp.Resource__r.rol__c).add(rp.Resource__c);
-      } else if (rp.Resource_Start_Date__c > projectRecord.Start_Date__c) {
-        if (!availableUsersByRol.containsKey(rp.Resource__r.rol__c)) {
-          availableUsersByRol.put(rp.Resource__r.rol__c, new Set<Id>());
-        }
-        availableUsersByRol.get(rp.Resource__r.rol__c).add(rp.Resource__c);
-      } else if (rp.Resource_Start_Date__c > projectRecord.End_Date__c) {
-        if (!availableUsersByRol.containsKey(rp.Resource__r.rol__c)) {
-          availableUsersByRol.put(rp.Resource__r.rol__c, new Set<Id>());
-        }
-        availableUsersByRol.get(rp.Resource__r.rol__c).add(rp.Resource__c);
+    List<Resource_Project__c> rpList = [
+      SELECT
+        Resource__r.Name,
+        Resource__r.FirstName,
+        Resource__r.LastName,
+        Resource_Start_Date__c,
+        Resource_End_Date__c,
+        Resource__c,
+        Resource__r.Rol__c,
+        Project__c,
+        Resource__r.Id,
+        Resource__r.Rate_p_Hora__c
+      FROM Resource_Project__c
+      WHERE Resource__c IN :resources
+      WITH SECURITY_ENFORCED
+    ];
+
+    List<User> forbiddenResources = new List<User>();
+
+    for (Resource_Project__c rp : rpList) {
+      //Check that condition 1 , Resource_End_Date__c < projectRecord.Start_Date__c
+      if (
+        rp.Resource_End_Date__c < projectRecord.Start_Date__c &&
+        rp.Project__c != projectId
+      ) {
+        datesCheckHelper(availableUsersByRol, rp);
+        //Check that condition 2 , Resource_End_Date__c < project Start_Date__c
+      } else if (
+        rp.Resource_End_Date__c < projectRecord.End_Date__c &&
+        rp.Project__c != projectId
+      ) {
+        datesCheckHelper(availableUsersByRol, rp);
+
+        //Check that condition 3 , Resource_Start_Date__c > project Start_Date__c
+      } else if (
+        rp.Resource_Start_Date__c > projectRecord.Start_Date__c &&
+        rp.Project__c != projectId
+      ) {
+        datesCheckHelper(availableUsersByRol, rp);
+        //Check that condition 4 , .Resource_Start_Date__c > project End_Date__c
+      } else if (
+        rp.Resource_Start_Date__c > projectRecord.End_Date__c &&
+        rp.Project__c != projectId
+      ) {
+        datesCheckHelper(availableUsersByRol, rp);
+        //If the resource does not meet the previous conditions and it exists in the map,
+        // because a resource-project allowed the entry in a previous condition,
+        //remove the resource from the map.
       } else {
-        availableUsersByRol.get(rp.Resource__r.rol__c).remove(rp.Resource__c);
+        if (!forbiddenResources.contains(rp.Resource__r))
+          forbiddenResources.add(rp.Resource__r);
       }
     }
+    System.debug('Forbidden resources' + forbiddenResources);
+    //Si hay resources que no tienen asignado ningun proyecto colocarlos en el mapa
+
+    List<Resource_Project__c> asiggnedResources = [
+      SELECT Resource__r.Name, Id
+      FROM Resource_Project__c
+    ];
+
+    Set<Id> assignedResourceIds = new Set<Id>();
+    for (Resource_Project__c rp : asiggnedResources) {
+      assignedResourceIds.add(rp.Resource__c);
+    }
+
+    List<User> freeResources = [
+      SELECT Name, Rol__c,Rate_p_hora__c
+      FROM User
+      WHERE Id NOT IN :(assignedResourceIds)
+    ];
+
+    for (User fr : freeResources) {
+      if (hoursByRol.keySet().contains(fr.Rol__c)) {
+        if (!availableUsersByRol.containsKey(fr.Rol__c)) {
+          availableUsersByRol.put(fr.rol__c, new List<User>());
+          availableUsersByRol.get(fr.Rol__c).add(fr);
+        } else {
+          availableUsersByRol.get(fr.Rol__c).add(fr);
+        }
+      }
+    }
+
+    //quitar de availableResourcesByRol los recursos que sí entraron en el mapa pero finalmente no podian prticipar
+    for (user res : forbiddenResources) {
+      if (
+        availableUsersByRol.containsKey(res.Rol__c) &&
+        availableUsersByRol.get(res.Rol__c).contains(res)
+      ) {
+        
+        availableUsersByRol.get(res.Rol__c)
+          .remove(availableUsersByRol.get(res.Rol__c).indexOf(res));
+        if (availableUsersByRol.get(res.Rol__c).size() == 0) {
+          availableUsersByRol.remove(res.Rol__c);
+        }
+      }
+    }
+
+    List<User> lista = new List<User>();
+    for(List<User> lu : availableUsersByRol.values()){
+      for(User u: lu){
+        lista.add(u);
+      }
+    }
+    system.debug(lista);
+    return lista;
+
+    //System.debug(availableUsersByRol);
+  }
+
+  public static void datesCheckHelper(
+    Map<String, List<User>> datamap,
+    Resource_Project__c rp
+  ) {
+    if (!datamap.containsKey(rp.Resource__r.rol__c)) {
+      datamap.put(rp.Resource__r.rol__c, new List<User>());
+    }
+    if (!datamap.get(rp.Resource__r.Rol__c).contains(rp.Resource__r)) {
+      datamap.get(rp.Resource__r.rol__c).add(rp.Resource__r);
+    }
+  }
+
+  @AuraEnabled(cacheable=true)
+  public static List<String> getRoles(Id projectId) {
+    getAvailableResources(projectId);
+   //System.debug(new List<String>(hoursByRole.keySet()));
+    return new List<String>(hoursByRol.keySet());
   }
 }
-//Listar los resource que esten disponibles en el periodo que este proyecto dure
-
-//fecha en que empieza y termina el proyecto - 1/5 empieza 31/5 termina
-//Rango de fecha en la que el recurso esta ocupado a partir de la fehca de comienzo del proyecto?
-/*
-mostrar las posiciones sin asignar 
-solamente le permita asignar personas que tengan el mismo rol 
-disponibles en el rango de fechas del proyecto.
-*/
