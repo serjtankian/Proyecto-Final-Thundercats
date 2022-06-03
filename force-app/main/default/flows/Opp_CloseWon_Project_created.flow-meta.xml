@@ -1,18 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>54.0</apiVersion>
+    <assignments>
+        <name>addNewRecordToList</name>
+        <label>addNewRecordToList</label>
+        <locationX>264</locationX>
+        <locationY>935</locationY>
+        <assignmentItems>
+            <assignToReference>PLI_Collection</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>PLItoRecord</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Iterate_OLI_registers</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>OLI_to_PLI_assign</name>
+        <label>OLI to PLI assign</label>
+        <locationX>264</locationX>
+        <locationY>815</locationY>
+        <assignmentItems>
+            <assignToReference>PLItoRecord.Amount__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Iterate_OLI_registers.Amount__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>PLItoRecord.Hours_Quantity__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Iterate_OLI_registers.Hours_Quantity__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>PLItoRecord.Project__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Create_Project</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>addNewRecordToList</targetReference>
+        </connector>
+    </assignments>
     <interviewLabel>Opp CloseWon-Project created {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Opp CloseWon-Project created</label>
     <loops>
-        <name>Loop_of_opportunity_line_Items</name>
-        <label>Loop of opportunity line Items</label>
+        <name>Iterate_OLI_registers</name>
+        <label>Iterate OLI registers</label>
         <locationX>176</locationX>
         <locationY>695</locationY>
-        <collectionReference>Retrieve_Opportunity_line_Items_values</collectionReference>
+        <collectionReference>OLI_Register_Collection</collectionReference>
         <iterationOrder>Asc</iterationOrder>
         <nextValueConnector>
-            <targetReference>clone_opportunity_line_item_info</targetReference>
+            <targetReference>OLI_to_PLI_assign</targetReference>
         </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>BulkCreate_Project_Line_Items</targetReference>
+        </noMoreValuesConnector>
     </loops>
     <processMetadataValues>
         <name>BuilderType</name>
@@ -34,39 +83,11 @@
     </processMetadataValues>
     <processType>AutoLaunchedFlow</processType>
     <recordCreates>
-        <name>clone_opportunity_line_item_info</name>
-        <label>clone opportunity line item info</label>
-        <locationX>264</locationX>
-        <locationY>815</locationY>
-        <connector>
-            <targetReference>Loop_of_opportunity_line_Items</targetReference>
-        </connector>
-        <inputAssignments>
-            <field>Amount__c</field>
-            <value>
-                <elementReference>Loop_of_opportunity_line_Items.Amount__c</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>Hours_Quantity__c</field>
-            <value>
-                <elementReference>Loop_of_opportunity_line_Items.Hours_Quantity__c</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>Project__c</field>
-            <value>
-                <elementReference>ProjectID</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>Rol__c</field>
-            <value>
-                <elementReference>Loop_of_opportunity_line_Items.Rol__c</elementReference>
-            </value>
-        </inputAssignments>
-        <object>Project_Line_Item__c</object>
-        <storeOutputAutomatically>true</storeOutputAutomatically>
+        <name>BulkCreate_Project_Line_Items</name>
+        <label>BulkCreate_Project_Line_Items</label>
+        <locationX>176</locationX>
+        <locationY>1151</locationY>
+        <inputReference>PLI_Collection</inputReference>
     </recordCreates>
     <recordCreates>
         <description>a new project is created</description>
@@ -75,7 +96,7 @@
         <locationX>176</locationX>
         <locationY>335</locationY>
         <connector>
-            <targetReference>Retrieve_Opportunity_line_Items_values</targetReference>
+            <targetReference>OLI_Register_Collection</targetReference>
         </connector>
         <inputAssignments>
             <field>Amount__c</field>
@@ -123,13 +144,13 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordCreates>
     <recordLookups>
-        <name>get_project</name>
-        <label>get project</label>
+        <name>getProjectId</name>
+        <label>getProjectId</label>
         <locationX>176</locationX>
         <locationY>575</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>Loop_of_opportunity_line_Items</targetReference>
+            <targetReference>Iterate_OLI_registers</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
@@ -146,13 +167,13 @@
         </outputAssignments>
     </recordLookups>
     <recordLookups>
-        <name>Retrieve_Opportunity_line_Items_values</name>
-        <label>Retrieve Opportunity line Items values</label>
+        <name>OLI_Register_Collection</name>
+        <label>OLI Register Collection</label>
         <locationX>176</locationX>
         <locationY>455</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>get_project</targetReference>
+            <targetReference>getProjectId</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
@@ -185,6 +206,45 @@
         <triggerType>RecordAfterSave</triggerType>
     </start>
     <status>Active</status>
+    <variables>
+        <name>Amount</name>
+        <dataType>Currency</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <scale>2</scale>
+    </variables>
+    <variables>
+        <name>Hours_Qtty</name>
+        <dataType>Number</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <scale>2</scale>
+    </variables>
+    <variables>
+        <name>PLI_Collection</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Project_Line_Item__c</objectType>
+    </variables>
+    <variables>
+        <name>PLItoRecord</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Project_Line_Item__c</objectType>
+    </variables>
+    <variables>
+        <name>Project_Lookup</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
     <variables>
         <name>ProjectID</name>
         <dataType>String</dataType>
