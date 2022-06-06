@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Assign_tasks_only_Project_In_Progress</fullName>
+    <active>false</active>
+    <errorConditionFormula>OR(ISPICKVAL(Resource_Project__r.Project__r.Status__c,&apos;Pre-Kickoff&apos;),ISPICKVAL(Resource_Project__r.Project__r.Status__c,&apos;Completed&apos; ))</errorConditionFormula>
+    <errorMessage>Only tasks are allowed to be assigned if the project status is &quot; In Progress &quot;.</errorMessage>
+</ValidationRule>
