@@ -336,5 +336,3 @@ public with sharing class Alocate_Resources_Helper {
    }
    }
 }
-
-// getDMLMessage

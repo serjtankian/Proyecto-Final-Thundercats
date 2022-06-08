@@ -1,7 +1,8 @@
 import { api, LightningElement, wire } from 'lwc';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+
 import getAvailableResources from '@salesforce/apex/Alocate_Resources_Helper.getAvailableResources';
 import insertResourceProject from '@salesforce/apex/Alocate_Resources_Helper.insertResourceProject';
-import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getCalculatedProjectHours from '@salesforce/apex/Alocate_Resources_Helper.getCalculatedProjectHours'
 
 import RESOURCE_PROJECT from '@salesforce/schema/Resource_Project__c';
@@ -31,15 +32,13 @@ const columns = [
 
 ];
 
-
-
 export default class resourceAllocationSon extends LightningElement {
-
 
     @api
     rol;
     @api
     recordId;
+
     hours;
     columns = columns;
 
@@ -67,7 +66,7 @@ export default class resourceAllocationSon extends LightningElement {
         }
         return count;
     }
-    
+
     handleSave(event) {
         const fields = {}
         fields[RESOURCE_ID.fieldApiName] = this.template.querySelector("lightning-datatable").getSelectedRows()[0].Id
@@ -100,16 +99,10 @@ export default class resourceAllocationSon extends LightningElement {
                         })
                     )
                 }
-                
-                
             })
-
-
-
-            
     }
 
-    
+
     connectedCallback() {
         let newObj = {}
         getCalculatedProjectHours({ projectId: this.recordId })
@@ -117,7 +110,7 @@ export default class resourceAllocationSon extends LightningElement {
                 for (let key in result.ToCover) {
                     if (!(result.Covered[key])) {
                         newObj[key] = result.ToCover[key] - 0
-                        this.hours = newObj[this.rol] 
+                        this.hours = newObj[this.rol]
                     } else {
                         newObj[key] = result.ToCover[key] - result.Covered[key]
                         this.hours = newObj[this.rol]
@@ -128,10 +121,8 @@ export default class resourceAllocationSon extends LightningElement {
                 console.log(error.body.message);
             })
     }
-
 }
 
-/* {developer:{covered:250,toCovered:500}} */
 
 
 

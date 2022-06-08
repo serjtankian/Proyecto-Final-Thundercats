@@ -1,10 +1,10 @@
 <template>
     <template if:true={resources}>
         <h1 class="title">{rol} - Hours to be covered: {hours} hs</h1>
-            <div key={user.Id} style="height: 300px;">
-                <lightning-datatable onsave={handleSave} key-field="id" data={resources.data} columns={columns}>
-                </lightning-datatable>
-            </div>
-    <lightning-button label="Assign" class="btn" onclick={fnPrint}></lightning-button>
+        <div key={user.Id} style="height: 300px;">
+            <lightning-datatable onsave={handleSave} key-field="id" data={resources.data} columns={columns}>
+            </lightning-datatable>
+        </div>
+        <lightning-button label="Assign" class="btn" onclick={fnPrint}></lightning-button>
     </template>
 </template>
