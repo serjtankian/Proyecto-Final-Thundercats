@@ -1,0 +1,15 @@
+<template>
+    <template if:true={arrOfAvaliableRoles}>
+        
+        <template for:each={arrOfAvaliableRoles.data} for:item="rol">
+            <!-- ["Developer","Architect"] -->
+            <div key={rol}>
+                <c-resource-allocation-son record-id={recordId} rol={rol}></c-resource-allocation-son>
+            </div>
+        </template>
+    </template>
+
+
+    <br>
+    <lightning-button label="FATHER" class="btn" onclick={fnPrint}></lightning-button>
+</template>
