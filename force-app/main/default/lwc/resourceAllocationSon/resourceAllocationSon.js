@@ -69,37 +69,60 @@ export default class resourceAllocationSon extends LightningElement {
 
     handleSave(event) {
         const fields = {}
-        fields[RESOURCE_ID.fieldApiName] = this.template.querySelector("lightning-datatable").getSelectedRows()[0].Id
-        fields[PROJECT_ID.fieldApiName] = this.recordId;
-        fields[RESOURCE_START_DATE.fieldApiName] = (event.detail.draftValues[0].Start_Date).substring(0, 10);
-        fields[RESOURCE_END_DATE.fieldApiName] = (event.detail.draftValues[0].End_Date).substring(0, 10);
 
-        let hours = this.getBusinessDatesCount(fields[RESOURCE_START_DATE.fieldApiName], fields[RESOURCE_END_DATE.fieldApiName]) * 8
-        fields[HOURS_QUANTITY.fieldApiName] = hours;
-        console.log(hours)
+        if (this.template.querySelector("lightning-datatable").getSelectedRows().length == 0) {
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Error: ',
+                    message: 'You must select at least one resource',
+                    variant: 'error',
+                })
+            )
+        }
 
-        const recordInput = { apiName: RESOURCE_PROJECT.objectApiName, fields }
-        console.log(recordInput)
-        insertResourceProject({ listResourceProject: [fields] })
-            .then((result) => {
-                if (result == 'Success') {
-                    this.dispatchEvent(
-                        new ShowToastEvent({
-                            title: 'Resource allocated!',
-                            message: result,
-                            variant: 'Success'
-                        })
-                    )
-                } else {
-                    this.dispatchEvent(
-                        new ShowToastEvent({
-                            title: 'Error: ',
-                            message: result,
-                            variant: 'error',
-                        })
-                    )
-                }
-            })
+        if (this.template.querySelector("lightning-datatable").getSelectedRows().length > 1) {
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Error: ',
+                    message: 'You can allocate just one resource at the same time',
+                    variant: 'error',
+                })
+            )
+        }
+
+        if (this.template.querySelector("lightning-datatable").getSelectedRows().length == 1) {
+            fields[RESOURCE_ID.fieldApiName] = this.template.querySelector("lightning-datatable").getSelectedRows()[0].Id
+            fields[PROJECT_ID.fieldApiName] = this.recordId;
+            fields[RESOURCE_START_DATE.fieldApiName] = (event.detail.draftValues[0].Start_Date).substring(0, 10);
+            fields[RESOURCE_END_DATE.fieldApiName] = (event.detail.draftValues[0].End_Date).substring(0, 10);
+
+            let hoursToSub = this.getBusinessDatesCount(fields[RESOURCE_START_DATE.fieldApiName], fields[RESOURCE_END_DATE.fieldApiName]) * 8
+            fields[HOURS_QUANTITY.fieldApiName] = hoursToSub;
+
+            const recordInput = { apiName: RESOURCE_PROJECT.objectApiName, fields }
+            console.log(recordInput)
+            insertResourceProject({ listResourceProject: [fields] })
+                .then((result) => {
+                    if (result == 'Success') {
+                        this.dispatchEvent(
+                            new ShowToastEvent({
+                                title: 'Resource allocated!',
+                                message: result,
+                                variant: 'Success'
+                            })
+                        )
+                        this.hours -= hoursToSub;
+                    } else {
+                        this.dispatchEvent(
+                            new ShowToastEvent({
+                                title: 'Error: ',
+                                message: result,
+                                variant: 'error',
+                            })
+                        )
+                    }
+                })
+        }
     }
 
 
