@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Project__c</fullName>
+    <fullName>ProjectLineItem__c</fullName>
     <deleteConstraint>SetNull</deleteConstraint>
-    <description>project to which the resource is assigned</description>
     <externalId>false</externalId>
-    <label>Project</label>
-    <referenceTo>Project__c</referenceTo>
+    <label>ProjectLineItem</label>
+    <referenceTo>ProjectLineItem__c</referenceTo>
     <relationshipLabel>Resource-Projects</relationshipLabel>
     <relationshipName>Resource_Projects</relationshipName>
     <required>false</required>

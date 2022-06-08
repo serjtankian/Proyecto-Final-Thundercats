@@ -1,0 +1,9 @@
+<template>
+    <template if:true={arrOfAvaliableRoles}>
+        <template for:each={arrOfAvaliableRoles.data} for:item="rol">
+            <div key={rol}>
+                <c-resource-allocation-son record-id={recordId} rol={rol}></c-resource-allocation-son>
+            </div>
+        </template>
+    </template>
+</template>
