@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>54.0</apiVersion>
+    <choices>
+        <name>Close_Won</name>
+        <choiceText>Close Won</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Close Won</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Open_Stages</name>
+        <choiceText>Open Stages</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Open Stages</stringValue>
+        </value>
+    </choices>
+    <constants>
+        <name>closewon</name>
+        <dataType>String</dataType>
+    </constants>
+    <constants>
+        <name>OpenStagesopportuniti</name>
+        <dataType>String</dataType>
+    </constants>
+    <interviewLabel>Cierre de opportuniti {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Cierre de oportunidad</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>Flow</processType>
+    <screens>
+        <name>Name_opportuniti</name>
+        <label>Name opportuniti</label>
+        <locationX>176</locationX>
+        <locationY>158</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <fields>
+            <name>Name</name>
+            <extensionName>flowruntime:name</extensionName>
+            <fieldType>ComponentInstance</fieldType>
+            <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+            <isRequired>true</isRequired>
+            <storeOutputAutomatically>true</storeOutputAutomatically>
+        </fields>
+        <fields>
+            <name>Checkbox_opportunity_CloseWon</name>
+            <dataType>Boolean</dataType>
+            <fieldText>Checkbox opportunity CloseWon</fieldText>
+            <fieldType>InputField</fieldType>
+            <isRequired>true</isRequired>
+        </fields>
+        <fields>
+            <name>Checkbox_opportunity_Open_Stage</name>
+            <dataType>Boolean</dataType>
+            <fieldText>Checkbox opportunity Open Stage</fieldText>
+            <fieldType>InputField</fieldType>
+            <isRequired>true</isRequired>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Name_opportuniti</targetReference>
+        </connector>
+    </start>
+    <status>Draft</status>
+</Flow>

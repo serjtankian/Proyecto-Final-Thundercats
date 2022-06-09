@@ -25,6 +25,18 @@
                 <default>false</default>
                 <label>Completed</label>
             </value>
+            <value>
+                <fullName>In Progres</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>In Progres</label>
+            </value>
+            <value>
+                <fullName>Pre-kikofff</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Pre-kikofff</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>
