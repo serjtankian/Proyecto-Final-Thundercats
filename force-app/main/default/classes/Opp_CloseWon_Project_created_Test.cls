@@ -120,6 +120,7 @@ public class Opp_CloseWon_Project_created_Test {
       //Check start Status of projects
       System.assertEquals('Pre-Kickoff', projectList[i].Status__c);
     }
+
     //Check correct Rollup Summary of data
     System.assertEquals(
       oppttyList[0].Opportunity_Amount__c,
@@ -142,5 +143,11 @@ public class Opp_CloseWon_Project_created_Test {
       projectList[0].Project_Manager__c,
       'Project manager incorrect cloned info'
     );
+
+    List<Project_Line_Item__c> pli = [SELECT Rol__c FROM Project_Line_Item__c WHERE Project__c =: projectList[0].Id ];
+
+    System.assertEquals(3, pli.size());
+    System.assertEquals('Project Manager', pli[0].Rol__c);
+  
   }
 }
