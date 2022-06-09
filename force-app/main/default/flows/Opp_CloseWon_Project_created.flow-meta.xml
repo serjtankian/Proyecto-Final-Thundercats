@@ -43,6 +43,13 @@
                 <elementReference>Create_Project</elementReference>
             </value>
         </assignmentItems>
+        <assignmentItems>
+            <assignToReference>PLItoRecord.Rol__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Iterate_OLI_registers.Rol__c</elementReference>
+            </value>
+        </assignmentItems>
         <connector>
             <targetReference>addNewRecordToList</targetReference>
         </connector>
@@ -248,6 +255,13 @@
     <variables>
         <name>ProjectID</name>
         <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>Rol</name>
+        <dataType>Picklist</dataType>
         <isCollection>false</isCollection>
         <isInput>false</isInput>
         <isOutput>false</isOutput>
