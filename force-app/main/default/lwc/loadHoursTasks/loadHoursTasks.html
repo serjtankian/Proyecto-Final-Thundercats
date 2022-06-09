@@ -1,0 +1,67 @@
+<template>
+  <div>
+    <lightning-layout class="layout">
+      <lightning-layout-item flexibility="auto" padding="around-small">
+        <div class="custom-box slds-box slds-p-around_medium slds-text-align_center whiteBackground">
+          <p class="text">Task</p>
+        </div>
+        <div class="custom-box slds-box slds-p-around_medium slds-text-align_center whiteBackground ">
+          <p class="task">{task.Name}</p>
+        </div>
+      </lightning-layout-item>
+      <lightning-layout-item flexibility="auto" padding="around-small">
+        <div class="custom-box slds-box slds-p-around_medium slds-text-align_center whiteBackground">
+          <p class="text">State</p>
+        </div>
+        <div class="custom-box slds-box slds-p-around_medium slds-text-align_center whiteBackground">
+          <p class="state">{task.Status__c}</p>
+        </div>
+      </lightning-layout-item>
+      <lightning-layout-item flexibility="auto" padding="around-small">
+        <div class="custom-box slds-box slds-p-around_medium slds-text-align_center whiteBackground">
+          <p class="text">Estimated hours</p>
+        </div>
+        <div class="custom-box slds-box slds-p-around_medium slds-text-align_center whiteBackground">
+          <p class="state">{task.Required_Hours__c}</p>
+        </div>
+      </lightning-layout-item>
+      <lightning-layout-item flexibility="auto" padding="around-small">
+        <div class="custom-box slds-box slds-p-around_medium slds-text-align_center whiteBackground">
+          <p class="text">Hours recorded</p>
+        </div>
+        <div class="custom-box slds-box slds-p-around_medium slds-text-align_center whiteBackground">
+          <p class="state">{task.Registered_Hours__c}</p>
+        </div>
+      </lightning-layout-item>
+      <lightning-layout-item flexibility="auto" padding="around-small">
+        <div class="custom-box slds-box slds-p-around_medium slds-text-align_center whiteBackground">
+          <p class="text">Actions</p>
+        </div>
+        <template if:false={status}>
+          <div class="custom-box slds-box slds-p-around_medium slds-text-align_center whiteBackground appear">
+            <lightning-button variant="brand-outline" label="Start" title="" onclick={handleClick}>
+            </lightning-button>
+          </div>
+        </template>
+        <template if:true={status}>
+          <div class="custom-box slds-box slds-p-around_medium slds-text-align_center whiteBackground appear">
+            <div class="boxBtns">
+              <div class="input">
+                <lightning-input type="number" label="" class="hour" onchange={inpuntOnChange}></lightning-input>
+              </div>
+              <div class="actionsBtn">
+                <lightning-button variant="brand-outline" label="Record hours" title="" onclick={handleClickPusHours}>
+                </lightning-button>
+              </div>
+              <div class="actionsBtn">
+                <lightning-button variant="brand-outline" label="Mark as Completed" title=""
+                  onclick={handleClickChangeStatus}>
+                </lightning-button>
+              </div>
+            </div>
+          </div>
+        </template>
+      </lightning-layout-item>
+    </lightning-layout>
+  </div>
+</template>

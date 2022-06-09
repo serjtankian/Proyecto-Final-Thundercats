@@ -1,0 +1,46 @@
+.whiteBackground{
+    background-color: white;
+    border-style: none;
+  }
+  
+  .task{
+    padding: 16px;
+    background-color: white;
+    color: black;
+    border: 2px solid #a2d2ff;
+    border-radius: 8px;
+    padding: 8px;
+  }
+  
+  .title{
+    background-color: white;
+    color: black;
+    border: 2px solid #a2d2ff;
+    font-size: 16px;
+    margin: 8px;
+    text-align: center;
+    padding: 8px;
+    font-weight: bold;
+    border-radius: 8px;
+  }
+  
+  .btn{
+    display: flex;
+    justify-content: center;
+  }
+  
+  .layout{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .text{
+    font-weight: bold;
+  }
+
+  .appear{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }

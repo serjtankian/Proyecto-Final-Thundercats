@@ -1,0 +1,19 @@
+<template>
+  <!-- IF EXIST PROJECTS -->
+  <template if:true={projects.length}>
+    <!-- FOR PROJECTS-->
+    <template for:each={projects} for:item="project">
+      <lightning-card title="" key={project.name}>
+        <h1 class="title"> {project.name} - {project.tasks.length} Pending Tasks</h1>
+        <div class="container">
+          <!-- FOR TASKS -->
+          <template for:each={project.tasks} for:item="task">
+            <div key={task.Id}>
+              <c-load-hours-tasks task={task}></c-load-hours-tasks>
+            </div>
+          </template>
+        </div>
+      </lightning-card>
+    </template>
+  </template>
+</template>

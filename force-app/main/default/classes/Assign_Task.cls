@@ -1,0 +1,70 @@
+public with sharing class Assign_Task {
+    //Trae las custom task pendientes para un resource-project y las retorna.
+    @AuraEnabled(cacheable = true)
+    public static Map<String,List<Custom_Task__c>> getCustomTask(){
+        
+        //obtener el id del usuario logueado.
+        Id userId = UserInfo.getuserId();
+        //System.debug(userId);
+        // traer los resources project cuya lookup sera UserId
+        List<Resource_Project__c>resource_project_linked=[SELECT Id, Resource__c 
+                                                          FROM Resource_Project__c 
+                                                          WHERE Resource__c=:userId];
+        
+        // System.debug(resource_project_linked);
+        // iterar la lista y poner los id en un set.
+        Set<Id> resources_project_id=new Set<Id>();
+        for(Resource_Project__c item:resource_project_linked){
+            resources_project_id.add(item.id);
+        }
+        List<Custom_Task__c> getTask=[Select Id,Name,Status__c,Project_Name__c,Resource_Project__c,Required_Hours__c,Registered_Hours__c
+                                      FROM Custom_Task__c 
+                                      WHERE Status__c!='Completed' 
+                                      AND Resource_Project__c IN:resources_project_id  order by Status__c DESC];
+        
+        //
+        Map<String,List<Custom_Task__c>> taskByProject= new Map<String,List<Custom_Task__c>>(); 
+        
+        for(Custom_Task__c task:getTask){
+            if(!taskByProject.containsKey(task.Project_Name__c)){
+                taskByProject.put(task.Project_Name__c,new List<Custom_Task__c>());
+                taskByProject.get(task.Project_Name__c).add(task);
+            }
+            else{
+                taskByProject.get(task.Project_Name__c).add(task);
+            }
+        }
+        System.debug(getTask);
+        return taskByProject;
+    }
+    // actualiza el campo Registered_Hours__c en la base de datos.
+     @AuraEnabled()
+ public static void setRegisteredHours(Id custom_task,Integer hours_Registered){
+        Custom_Task__c task=[SELECT id,Registered_Hours__c 
+                                   FROM Custom_Task__c 
+                                   WHERE id=:custom_task];
+        
+            if(task.Registered_Hours__c==NULL){
+              task.Registered_Hours__c=hours_Registered;
+            }
+            else{
+                task.Registered_Hours__c+=hours_Registered;
+            }
+        update task;
+}
+	// cambia el status de la custom task a 'In Progress'รณ'completed'
+    // y lo actualiza en la base de datos.
+     @AuraEnabled()
+    public static void change_Status(Id custom_task,String status){
+        Custom_Task__c task=[SELECT id, Status__c 
+                                    FROM Custom_Task__c 
+                                    WHERE id=:custom_task];
+        
+                if(status=='Completed'||status=='In Progress' ){
+                task.Status__c=status;
+                }
+            
+            update task;
+        }
+
+}
